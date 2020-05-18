@@ -105,7 +105,11 @@ def model_fn(features, labels, mode):
     return estim_specs
 
 # Build the Estimator
-model = tf.estimator.Estimator(model_fn)
+session_config = tf.ConfigProto()
+session_config.gpu_options.allow_growth=True
+run_config = tf.estimator.RunConfig(session_config = session_config)
+
+model = tf.estimator.Estimator(model_fn, model_dir="/tmp/example", config=run_config)
 
 # Define the input function for training
 input_fn = tf.estimator.inputs.numpy_input_fn(

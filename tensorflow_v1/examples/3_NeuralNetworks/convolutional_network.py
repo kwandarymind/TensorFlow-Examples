@@ -127,3 +127,13 @@ input_fn = tf.estimator.inputs.numpy_input_fn(
 e = model.evaluate(input_fn)
 
 print("Testing Accuracy:", e['accuracy'])
+
+def serving_func():
+    input_images = tf.placeholder(dtype=tf.float32, shape=[1, 28, 28, 1], name='images')
+    receiver_tensors = {'images' : input_images}
+    features = {'images' : input_images}
+    return tf.estimator.export.ServingInputReceiver(features, receiver_tensors)
+
+model.export_saved_model('saved_model', serving_func)
+
+print("Saved ... all done")
